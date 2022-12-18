@@ -7,7 +7,7 @@
 
 int main()
 {
-    int x, y; // Coords
+    unsigned int x, y; // Dimension
 
 
 
