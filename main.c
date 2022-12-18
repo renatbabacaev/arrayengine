@@ -15,6 +15,12 @@ int main()
     FILE *level;
     level = fopen("level", "r");
     fscanf(level, "%i %i", &x, &y);
+    if(x == 0 || y == 0)
+    {
+        fclose(level);
+        printf("\nInvalid world dimensions.");
+        return 0;
+    }
 
     char world[y][x];
     for(int i = 0; i < y; i++)
