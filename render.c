@@ -92,11 +92,17 @@ void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
 
 
     // Y bounds
-    up_bound   = ypos - (camfov/2) + 1;
+    up_bound   = ypos - (camfov/2);
     down_bound = ypos + (camfov/2);
     // X bounds
-    left_bound  = xpos - (camfov/2) + 1;
+    left_bound  = xpos - (camfov/2);
     right_bound = xpos + (camfov/2);
+
+    if(camfov % 2 == 0)
+    {
+        up_bound++;
+        left_bound++;
+    }
 
     // Back to bounds math: Negative shift
     if(up_bound < 0)
