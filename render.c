@@ -63,11 +63,6 @@ void print(int up, int down, int left, int right, int x, int y, char a[y][x])
 
 void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
 {
-    int i, j;
-
-    x--;
-    y--;
-
     // If world is smaller than camera fov
     if(x <= camfov - 1 || y <= camfov - 1)
     {
@@ -75,6 +70,9 @@ void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
         print(0, y, 0, x, x + 1, y + 1, a);
         return;
     }
+
+    x--;
+    y--;
     
     // Math coordonates to array index
     xpos--;
