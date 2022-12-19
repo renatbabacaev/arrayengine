@@ -25,6 +25,8 @@ int main()
         return 0;
     }
 
+    fscanf(level, "%u", &camfov);
+
     char world[y][x];
     for(int i = 0; i < y; i++)
     {
@@ -33,8 +35,6 @@ int main()
 
     fclose(level);
 
-    printf("\e[1;1H\e[2J\nEnter camera FOV: ");
-    scanf("%u", &camfov);
     printf("\nEnter starting point (x y): ");
     scanf("%i %i", &x_player, &y_player);
 
