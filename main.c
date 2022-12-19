@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "render.h"
 
@@ -9,11 +8,7 @@ int main()
 {
     int x, y; // Dimension
 
-    unsigned int camfov;        // Camera fov
-    int x_player, y_player;     // Player coordinates
-
-
-
+    
     // Creating world from file
     FILE *level;
     level = fopen("level", "r");
@@ -25,6 +20,8 @@ int main()
         return 0;
     }
 
+    unsigned int camfov;        // Camera fov
+    int x_player, y_player;     // Player coordinates
     fscanf(level, "%u", &camfov);
 
     char world[y][x];
@@ -35,16 +32,17 @@ int main()
 
     fclose(level);
 
-    printf("\nEnter starting point (x y): ");
+    printf("\e[1;1H\e[2J\nEnter starting point (x y): ");
     scanf("%i %i", &x_player, &y_player);
 
-    // Normalize to top-right coordinate axis (Left-Bottom = (1, 1) )
-    y_player = y - y_player;
-    if(x_player > x || x_player <= 0 || y_player > y || y_player <= 0)
+    if(x_player > x || (y - y_player) > y || x_player <= 0 || (y - y_player) <= 0)
     {
         printf("\nOut of bounds position.");
         return 0;
     }
+
+    // Normalize to top-right coordinate axis (Left-Bottom = (1, 1) )
+    y_player = y - y_player;
 
     camera(x, y, world, x_player, y_player, camfov);   // Only height needed
 
