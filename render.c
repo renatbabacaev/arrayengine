@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "render.h"
 
+#define WHITE   "\x1b[48;2;255;255;255m"
+#define BLACK   "\x1b[48;2;0;0;0m"
+
 #define RED     "\x1b[41m"
 #define GREEN   "\x1b[48;2;60;176;74m"
 #define YELLOW  "\x1b[48;2;212;210;83m"
@@ -20,37 +23,98 @@
 Maybe will make output as colored dots only
 */
 
-void camera(int x, int y, char a[y][x])
+// Maybe give an input value
+
+
+void print(int up, int down, int left, int right, int x, int y, char a[y][x])
 {
-    printf("\e[1;1H\e[2J"); // Clear screen
-    
-    for(int i = 0; i < y * x; i++)
+    int i, j;
+
+    for(j = up; j <= down; j++)
     {
-        if(i % x == 0 && i != 0)
-        {
-            printf("\n");
+        for(i = left; i <= right; i++)
+        {       
+            //Render part
+            switch (a[j][i])
+            {
+            case '.':
+                printf(GREEN "  " RESET);
+                break;
+            case ',':
+                printf(YELLOW "  " RESET);
+                break;
+            case '#':
+                printf(BROWN "  " RESET);
+                break;
+            case '@':
+                printf(PINK "  " RESET);
+                break;
+            
+            default:
+                printf(BLACK "  " RESET);
+                break;
+            }
         }
-        switch (a[0][i])
-        {
-        case '.':
-            printf(GREEN "  " RESET);
-            break;
-        
-        case ',':
-            printf(YELLOW "  " RESET);
-            break;
-
-        case '#':
-            printf(BROWN "  " RESET);
-            break;
-
-        case '@':
-            printf(PINK "  " RESET);
-            break;
-
-        default:
-            printf("  ");
-            break;
-        }
+        printf("\n"); 
     }
+    
+    return; 
+}
+
+void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
+{
+    int i, j;
+
+    x--;
+    y--;
+
+    // If world is smaller than camera fov
+    if(x <= camfov - 1 || y <= camfov - 1)
+    {
+        // + 1 in order to set correct matrix size
+        print(0, y, 0, x, x + 1, y + 1, a);
+        return;
+    }
+    
+    // Math coordonates to array index
+    xpos--;
+    // ypos--;
+
+    int up_bound, down_bound;
+    int left_bound, right_bound;
+
+    // Y bounds
+    up_bound   = ypos - (camfov/2);
+    down_bound = ypos + (camfov/2);
+    // X bounds
+    left_bound  = xpos - (camfov/2);
+    right_bound = xpos + (camfov/2);
+
+    // Back to bounds math: Negative shift
+    if(up_bound < 0)
+    {
+        down_bound = camfov - 1;
+        up_bound = 0;
+    }
+    if(left_bound < 0)
+    {
+        right_bound = camfov - 1;
+        left_bound = 0;
+    }
+
+    // Positive shift
+    if(down_bound >= y)
+    {
+        up_bound = y - camfov + 1;
+        down_bound = y;
+    }
+    if(right_bound >= x)
+    {
+        left_bound = x - camfov;
+        right_bound = x;
+    }
+
+    print(up_bound, down_bound, left_bound, right_bound, x + 1, y + 1, a);
+
+    return; 
 }
