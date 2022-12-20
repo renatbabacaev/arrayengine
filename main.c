@@ -25,19 +25,19 @@ int main()
     {
         fclose(level);
         printf("\nInvalid world dimensions.");
-        return 0;
+        return -1;
     }
     if(x_player > x || y_player > y || x_player < 0 || y_player < 0)
     {
         fclose(level);
         printf("\nOut of bounds position.");
-        return 0;
+        return -1;
     }
     if(camfov == 0)
     {
         fclose(level);
         printf("\nInvalid FOV value.");
-        return 0;
+        return -1;
     }
 
     // World input
