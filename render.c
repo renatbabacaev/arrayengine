@@ -14,6 +14,8 @@
 #define CYAN    "\x1b[46m"
 #define RESET   "\x1b[0m"
 
+char *color[] = { BLACK, WHITE, RED, GREEN, YELLOW, BROWN, PINK };
+
 /*
 . - green color
 , - yellow color
@@ -34,7 +36,7 @@ int up, down, left, right;
 
 void print(char a[y][x])
 {
-    int i, j;
+    int i, j, colori;
 
     for(j = up; j <= down; j++)
     {
@@ -44,22 +46,25 @@ void print(char a[y][x])
             switch (a[j][i])
             {
             case '.':
-                printf(GREEN "  " RESET);
+                colori = 3;
                 break;
             case ',':
-                printf(YELLOW "  " RESET);
+                colori = 4;
                 break;
             case '#':
-                printf(BROWN "  " RESET);
+                colori = 5;
                 break;
             case '@':
-                printf(PINK "  " RESET);
+                colori = 6;
                 break;
             
             default:
-                printf(BLACK "  " RESET);
+                colori = 0;
                 break;
             }
+
+            printf(color[colori]);
+            printf("  " RESET);
         }
         printf("\n"); 
     }
