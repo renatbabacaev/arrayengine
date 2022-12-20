@@ -21,25 +21,13 @@ int main()
     y_player = y - y_player;
     x_player = x_player - 1;
 
-    if(x <= 0 || y <= 0)
+    if((x <= 0 || y <= 0) || (x_player > x || y_player > y || x_player < 0 || y_player < 0) || (camfov == 0))
     {
         fclose(level);
-        printf("\nInvalid world dimensions.");
-        return 0;
+        printf("\nInvalid input.\nPlease refer to SDK guide included with engine for valid values.");
+        return -1;
     }
-    if(x_player > x || y_player > y || x_player < 0 || y_player < 0)
-    {
-        fclose(level);
-        printf("\nOut of bounds position.");
-        return 0;
-    }
-    if(camfov == 0)
-    {
-        fclose(level);
-        printf("\nInvalid FOV value.");
-        return 0;
-    }
-
+    
     // World input
     char world[y][x];
     for(int i = 0; i < y; i++)
