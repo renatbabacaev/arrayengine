@@ -14,13 +14,14 @@
 #define CYAN    "\x1b[46m"
 #define RESET   "\x1b[0m"
 
-char *color[] = { BLACK, WHITE, RED, GREEN, YELLOW, BROWN, PINK };
+char *color[] = { BLACK, WHITE, RED, GREEN, YELLOW, BROWN, PINK, CYAN };
 
 /*
 . - green color
 , - yellow color
 # - brown
 @ - pink
+~ - cyan
 
 Maybe will make output as colored dots only
 */
@@ -36,6 +37,7 @@ int up, down, left, right;
 
 void print(char a[y][x])
 {
+    printf("\e[1;1H\e[2J");
     int i, j, colori;
 
     for(j = up; j <= down; j++)
@@ -56,6 +58,9 @@ void print(char a[y][x])
                 break;
             case '@':
                 colori = 6;
+                break;
+            case '~':
+                colori = 7;
                 break;
             
             default:
