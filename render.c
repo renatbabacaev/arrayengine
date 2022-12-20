@@ -25,17 +25,20 @@ Maybe will make output as colored dots only
 
 // Maybe give an input value
 
+// General variables
 extern int x, y;
 extern int x_player, y_player;
 extern unsigned int camfov;
 
-void print(int up, int down, int left, int right, char a[y][x])
+int up, down, left, right; 
+
+void print(char a[y][x])
 {
     int i, j;
 
-    for(j = up; j <= down; j++)
+    for(j = up; j < down; j++)
     {
-        for(i = left; i <= right; i++)
+        for(i = left; i < right; i++)
         {       
             //Render part
             switch (a[j][i])
@@ -66,20 +69,16 @@ void print(int up, int down, int left, int right, char a[y][x])
 
 void camera(char a[y][x])
 {
-    // If world is smaller than camera fov
-    if(x <= camfov - 1 || y <= camfov - 1)
-    {
-        // + 1 in order to set correct matrix size
-        print(0, y - 1, 0, x - 1, a);
-        return;
-    }
-    
     // Math coordonates to array index
-    x_player--;
-    // ypos--;
+    // x_player--;
+    // y_player--;
 
-    int up_bound, down_bound;
-    int left_bound, right_bound;
+    // Y bounds
+    up   = y_player - (camfov/2);
+    down = y_player + (camfov/2) + 1;
+    // X bounds
+    left  = x_player - (camfov/2) - 1;
+    right = x_player + (camfov/2);
 
     /*
         If camera FOV is positive (10x10 screen)
@@ -89,46 +88,44 @@ void camera(char a[y][x])
         to move, move camera if they leave the 
         middle 2x2 zone (center).
     */
-
-
-    // Y bounds
-    up_bound   = y_player - (camfov/2);
-    down_bound = y_player + (camfov/2);
-    // X bounds
-    left_bound  = x_player - (camfov/2);
-    right_bound = x_player + (camfov/2);
-
     if(camfov % 2 == 0)
     {
-        up_bound++;
-        left_bound++;
+        up++;
+        left++;
     }
 
-    // Back to bounds math: Negative shift
-    if(up_bound < 0)
+    // Up and Down camera bounds
+    if(up < 0)
     {
-        down_bound = camfov - 1;
-        up_bound = 0;
+        down = camfov;
+        up = 0;
     }
-    if(left_bound < 0)
+    else if(down >= y)
     {
-        right_bound = camfov - 1;
-        left_bound = 0;
+        up = y - camfov;
+        down = y;
+    }
+    // Left and Right camera bounds
+    if(left < 0)
+    {
+        right = camfov;
+        left = 0;
+    }
+    else if(right >= x)
+    {
+        left = x - camfov;
+        right = x;
     }
 
-    // Positive shift
-    if(down_bound >= y)
-    {
-        up_bound = y - camfov + 1;
-        down_bound = y;
-    }
-    if(right_bound >= x)
-    {
-        left_bound = x - camfov;
-        right_bound = x;
-    }
 
-    print(up_bound, down_bound, left_bound, right_bound, a);
+    // If camera FOV is bigger than world
+    if(x <= camfov - 1 || y <= camfov - 1)
+    {
+        print(a);
+        return;
+    }
+    
+    print(a);
 
     return; 
 }

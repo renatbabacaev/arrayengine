@@ -16,6 +16,10 @@ int main()
     fscanf(level, "%i %i", &x, &y);
     fscanf(level, "%i %i", &x_player, &y_player);
     fscanf(level, "%u",    &camfov);
+
+    // Normalize
+    y_player = y - y_player;
+
     if(x <= 0 || y <= 0)
     {
         fclose(level);
