@@ -25,8 +25,11 @@ Maybe will make output as colored dots only
 
 // Maybe give an input value
 
+extern int x, y;
+extern int x_player, y_player;
+extern unsigned int camfov;
 
-void print(int up, int down, int left, int right, int x, int y, char a[y][x])
+void print(int up, int down, int left, int right, char a[y][x])
 {
     int i, j;
 
@@ -61,21 +64,18 @@ void print(int up, int down, int left, int right, int x, int y, char a[y][x])
     return; 
 }
 
-void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
+void camera(char a[y][x])
 {
     // If world is smaller than camera fov
     if(x <= camfov - 1 || y <= camfov - 1)
     {
         // + 1 in order to set correct matrix size
-        print(0, y, 0, x, x + 1, y + 1, a);
+        print(0, y - 1, 0, x - 1, a);
         return;
     }
-
-    x--;
-    y--;
     
     // Math coordonates to array index
-    xpos--;
+    x_player--;
     // ypos--;
 
     int up_bound, down_bound;
@@ -92,11 +92,11 @@ void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
 
 
     // Y bounds
-    up_bound   = ypos - (camfov/2);
-    down_bound = ypos + (camfov/2);
+    up_bound   = y_player - (camfov/2);
+    down_bound = y_player + (camfov/2);
     // X bounds
-    left_bound  = xpos - (camfov/2);
-    right_bound = xpos + (camfov/2);
+    left_bound  = x_player - (camfov/2);
+    right_bound = x_player + (camfov/2);
 
     if(camfov % 2 == 0)
     {
@@ -128,7 +128,7 @@ void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
         right_bound = x;
     }
 
-    print(up_bound, down_bound, left_bound, right_bound, x + 1, y + 1, a);
+    print(up_bound, down_bound, left_bound, right_bound, a);
 
     return; 
 }
