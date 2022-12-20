@@ -19,6 +19,7 @@ int main()
 
     // Normalize
     y_player = y - y_player;
+    x_player = x_player - 1;
 
     if(x <= 0 || y <= 0)
     {
@@ -26,7 +27,7 @@ int main()
         printf("\nInvalid world dimensions.");
         return 0;
     }
-    if(x_player > x || (y - y_player) > y || x_player <= 0 || (y - y_player) <= 0)
+    if(x_player > x || y_player > y || x_player < 0 || y_player < 0)
     {
         fclose(level);
         printf("\nOut of bounds position.");

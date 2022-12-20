@@ -36,9 +36,9 @@ void print(char a[y][x])
 {
     int i, j;
 
-    for(j = up; j < down; j++)
+    for(j = up; j <= down; j++)
     {
-        for(i = left; i < right; i++)
+        for(i = left; i <= right; i++)
         {       
             //Render part
             switch (a[j][i])
@@ -75,24 +75,10 @@ void camera(char a[y][x])
 
     // Y bounds
     up   = y_player - (camfov/2);
-    down = y_player + (camfov/2) + 1;
+    down = y_player + (camfov/2);
     // X bounds
-    left  = x_player - (camfov/2) - 1;
+    left  = x_player - (camfov/2);
     right = x_player + (camfov/2);
-
-    /*
-        If camera FOV is positive (10x10 screen)
-        then place coordonates in top-left pixel.
-
-        In the future, if the player will be able
-        to move, move camera if they leave the 
-        middle 2x2 zone (center).
-    */
-    if(camfov % 2 == 0)
-    {
-        up++;
-        left++;
-    }
 
     // Up and Down camera bounds
     if(up < 0)
@@ -117,13 +103,30 @@ void camera(char a[y][x])
         right = x;
     }
 
-
     // If camera FOV is bigger than world
-    if(x <= camfov - 1 || y <= camfov - 1)
+    if(x <= camfov || y <= camfov)
     {
+        right = x - 1;
+        down = y - 1;
         print(a);
         return;
     }
+
+    /*
+        If camera FOV is positive (10x10 screen)
+        then place coordonates in top-left pixel.
+
+        In the future, if the player will be able
+        to move, move camera if they leave the 
+        middle 2x2 zone (center).
+    */
+    if(camfov % 2 == 0)
+    {
+        up++;
+        left++;
+    }
+
+
     
     print(a);
 
