@@ -38,6 +38,7 @@ int up, down, left, right;
 void camera(char a[y][x])
 {
     /* Camera bound begin */
+    
     // Math coordonates to array index
     // x_player--;
     // y_player--;
@@ -46,6 +47,13 @@ void camera(char a[y][x])
     down = y_player + (camfov/2);   // Y
     left  = x_player - (camfov/2);  // X bounds
     right = x_player + (camfov/2);  // X
+
+    // Even
+    if(camfov % 2 == 0)
+    {
+        left += 1;
+        up += 1;
+    }
 
     // Check if Up and Down bounds are out of world
     if(up < 0)
@@ -85,7 +93,6 @@ void camera(char a[y][x])
         to move, move camera if they leave the 
         middle 2x2 zone (center).
     */
-
 
     /* Camera bounds end */
     
