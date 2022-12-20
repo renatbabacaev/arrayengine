@@ -16,23 +16,28 @@ int main()
     fscanf(level, "%i %i", &x, &y);
     fscanf(level, "%i %i", &x_player, &y_player);
     fscanf(level, "%u",    &camfov);
+
+    // Normalize
+    y_player = y - y_player;
+    x_player = x_player - 1;
+
     if(x <= 0 || y <= 0)
     {
         fclose(level);
         printf("\nInvalid world dimensions.");
-        return 0;
+        return -1;
     }
-    if(x_player > x || (y - y_player) > y || x_player <= 0 || (y - y_player) <= 0)
+    if(x_player > x || y_player > y || x_player < 0 || y_player < 0)
     {
         fclose(level);
         printf("\nOut of bounds position.");
-        return 0;
+        return -1;
     }
     if(camfov == 0)
     {
         fclose(level);
         printf("\nInvalid FOV value.");
-        return 0;
+        return -1;
     }
 
     // World input

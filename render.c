@@ -14,24 +14,31 @@
 #define CYAN    "\x1b[46m"
 #define RESET   "\x1b[0m"
 
+char *color[] = { BLACK, WHITE, RED, GREEN, YELLOW, BROWN, PINK, CYAN };
+
 /*
 . - green color
 , - yellow color
 # - brown
 @ - pink
+~ - cyan
 
 Maybe will make output as colored dots only
 */
 
 // Maybe give an input value
 
+// General variables
 extern int x, y;
 extern int x_player, y_player;
 extern unsigned int camfov;
 
-void print(int up, int down, int left, int right, char a[y][x])
+int up, down, left, right; 
+
+void print(char a[y][x])
 {
-    int i, j;
+    printf("\e[1;1H\e[2J");
+    int i, j, colori;
 
     for(j = up; j <= down; j++)
     {
@@ -41,22 +48,28 @@ void print(int up, int down, int left, int right, char a[y][x])
             switch (a[j][i])
             {
             case '.':
-                printf(GREEN "  " RESET);
+                colori = 3;
                 break;
             case ',':
-                printf(YELLOW "  " RESET);
+                colori = 4;
                 break;
             case '#':
-                printf(BROWN "  " RESET);
+                colori = 5;
                 break;
             case '@':
-                printf(PINK "  " RESET);
+                colori = 6;
+                break;
+            case '~':
+                colori = 7;
                 break;
             
             default:
-                printf(BLACK "  " RESET);
+                colori = 0;
                 break;
             }
+
+            printf(color[colori]);
+            printf("  " RESET);
         }
         printf("\n"); 
     }
@@ -66,20 +79,48 @@ void print(int up, int down, int left, int right, char a[y][x])
 
 void camera(char a[y][x])
 {
-    // If world is smaller than camera fov
-    if(x <= camfov - 1 || y <= camfov - 1)
+    // Math coordonates to array index
+    // x_player--;
+    // y_player--;
+
+    // Y bounds
+    up   = y_player - (camfov/2);
+    down = y_player + (camfov/2);
+    // X bounds
+    left  = x_player - (camfov/2);
+    right = x_player + (camfov/2);
+
+    // Up and Down camera bounds
+    if(up < 0)
     {
-        // + 1 in order to set correct matrix size
-        print(0, y - 1, 0, x - 1, a);
+        down = camfov;
+        up = 0;
+    }
+    else if(down >= y)
+    {
+        up = y - camfov;
+        down = y;
+    }
+    // Left and Right camera bounds
+    if(left < 0)
+    {
+        right = camfov;
+        left = 0;
+    }
+    else if(right >= x)
+    {
+        left = x - camfov;
+        right = x;
+    }
+
+    // If camera FOV is bigger than world
+    if(x <= camfov || y <= camfov)
+    {
+        right = x - 1;
+        down = y - 1;
+        print(a);
         return;
     }
-    
-    // Math coordonates to array index
-    x_player--;
-    // ypos--;
-
-    int up_bound, down_bound;
-    int left_bound, right_bound;
 
     /*
         If camera FOV is positive (10x10 screen)
@@ -89,46 +130,15 @@ void camera(char a[y][x])
         to move, move camera if they leave the 
         middle 2x2 zone (center).
     */
-
-
-    // Y bounds
-    up_bound   = y_player - (camfov/2);
-    down_bound = y_player + (camfov/2);
-    // X bounds
-    left_bound  = x_player - (camfov/2);
-    right_bound = x_player + (camfov/2);
-
     if(camfov % 2 == 0)
     {
-        up_bound++;
-        left_bound++;
+        up++;
+        left++;
     }
 
-    // Back to bounds math: Negative shift
-    if(up_bound < 0)
-    {
-        down_bound = camfov - 1;
-        up_bound = 0;
-    }
-    if(left_bound < 0)
-    {
-        right_bound = camfov - 1;
-        left_bound = 0;
-    }
 
-    // Positive shift
-    if(down_bound >= y)
-    {
-        up_bound = y - camfov + 1;
-        down_bound = y;
-    }
-    if(right_bound >= x)
-    {
-        left_bound = x - camfov;
-        right_bound = x;
-    }
-
-    print(up_bound, down_bound, left_bound, right_bound, a);
+    
+    print(a);
 
     return; 
 }
