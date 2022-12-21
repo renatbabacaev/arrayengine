@@ -13,4 +13,10 @@ gameX32: main.c render.c
 gameX32DEBUG: main.c render.c
 	gcc -m32 -o gameX32DEBUG -g main.c render.c
 
-all: gameX64 gameX64DEBUG game gameDEBUG
+all: gameX64 gameX64DEBUG gameX32 gameX32DEBUG game gameDEBUG
+ready: gameX64 gameX32 game
+debug: gameX64DEBUG gameX32DEBUG gameDEBUG
+
+native: game gameDEBUG
+x32: gameX32 gameX32DEBUG
+x64: gameX64 gameX64DEBUG
