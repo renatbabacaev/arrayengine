@@ -1,52 +1,26 @@
-#include <stdio.h>
+//#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
 #include "render.h"
+#include "color.h"
 
-#define WHITE   "\x1b[48;2;255;255;255m"
-#define BLACK   "\x1b[48;2;0;0;0m"
 
-#define RED     "\x1b[41m"
-#define GREEN   "\x1b[48;2;60;176;74m"
-#define YELLOW  "\x1b[48;2;212;210;83m"
-#define BROWN   "\x1b[48;2;66;36;13m"
-#define PINK    "\x1b[48;2;252;177;202m"
-#define BLUE    "\x1b[44m"
-#define MAGENTA "\x1b[45m"
-#define CYAN    "\x1b[46m"
-#define RESET   "\x1b[0m"
 
-char *color[] = { BLACK, WHITE, RED, GREEN, YELLOW, BROWN, PINK, CYAN };
-
-/*
-. - green color
-, - yellow color
-# - brown
-@ - pink
-~ - cyan
-
-Maybe will make output as colored dots only
-*/
-
-// Maybe give an input value
-
-// General variables
-extern int x, y;
-extern int x_player, y_player;
-extern unsigned int camfov;
-
-int up, down, left, right; 
-
-void camera(char a[y][x])
+void camera(int x, int y, char a[y][x], int xpos, int ypos, unsigned int camfov)
 {
+    int up, down, left, right, i, j, colorb, colorf;
+
     /* Camera bound begin */
     
     // Math coordonates to array index
     // x_player--;
     // y_player--;
 
-    up   = y_player - (camfov/2);   // Y bounds
-    down = y_player + (camfov/2);   // Y
-    left  = x_player - (camfov/2);  // X bounds
-    right = x_player + (camfov/2);  // X
+    up   = ypos - (camfov/2);   // Y bounds
+    down = ypos + (camfov/2);   // Y
+    left  = xpos - (camfov/2);  // X bounds
+    right = xpos + (camfov/2);  // X
 
     // Even
     if(camfov % 2 == 0)
@@ -97,40 +71,39 @@ void camera(char a[y][x])
     /* Camera bounds end */
     
     
-    printf("\e[1;1H\e[2J");
-    int i, j, colori;
+    write(1, "\e[1;1H\e[2J", strlen("\e[1;1H\e[2J"));
 
     for(j = up; j <= down; j++)
     {
         for(i = left; i <= right; i++)
-        {       
+        {
             //Render part
             switch (a[j][i])
             {
-            case '.':
-                colori = 3;
-                break;
-            case ',':
-                colori = 4;
-                break;
-            case '#':
-                colori = 5;
-                break;
-            case '@':
-                colori = 6;
-                break;
-            case '~':
-                colori = 7;
-                break;
-            
-            default:
-                colori = 0;
-                break;
+                case '.':
+                    colorb = colorf = 3;
+                    break;
+                case ',':
+                    colorb = colorf = 4;
+                    break;
+                case '#':
+                    colorb = colorf = 5;
+                    break;
+                case '@':
+                    colorb = colorf = 6;
+                    break;
+                case '~':
+                    colorb = colorf = 7;
+                    break;
+                
+                default:
+                    colorb = colorf = 0;
+                    break;    
             }
 
-            printf(color[colori]);
-            printf("  "RESET);
+            write(1, background[colorb], strlen(background[colorb]));
+            write(1, "  "RESET, strlen("  "RESET));
         }
-        printf("\n"); 
+        write(1, "\n", strlen("\n")); 
     }
 }
